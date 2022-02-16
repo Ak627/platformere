@@ -1,7 +1,7 @@
 import pygame
 import random
 pygame.init()  
-pygame.display.set_caption("easy platformer")  # sets the window title
+pygame.display.set_caption("platformer")  # sets the window title
 screen = pygame.display.set_mode((800, 800))  # creates game screen
 screen.fill((0,0,0))
 clock = pygame.time.Clock() #set up clock
@@ -22,12 +22,14 @@ class Platform:
     def draw(self):
         pygame.draw.rect(screen, (random.randrange(0,250), random.randrange(0,250),random.randrange(0,250)),(self.xpos, self.ypos, 100, 20))
     def collide(self, x, y):
-        if x+20>self.xpos and x<self.xpos+100 and y+20> self.ypos and y < self.ypos + 20:
-            return True
+        if x>self.xpos and x<self.xpos+100 and y+40> self.ypos and y+40 < self.ypos + 20:
+            return self.ypos
+        else:
+            return False
 
 #player variables
-xpos = 500 #xpos of player
-ypos = 200 #ypos of player
+Px= 500 #xpos of player
+Py= 200 #ypos of player
 vx = 0 #x velocity of player
 vy = 0 #y velocity of player
 keys = [False, False, False, False] #this list holds whether each key has been pressed
@@ -36,6 +38,9 @@ isOnGround = False #this variable stops gravity from pulling you down more when 
 
 p1=Platform(420, 600)
 p2 = Platform(100, 750)
+p3 = Platform(200, 650)
+p4 = Platform(300, 575)
+p5  = Platform(175, 500)
 while not gameover: #GAME LOOP############################################################
     clock.tick(60) #FPS
     
@@ -73,7 +78,9 @@ while not gameover: #GAME LOOP##################################################
     #turn off velocity
     else:
         vx = 0
-        #JUMPING
+        
+        
+      #JUMPING  
     if keys[UP] == True and isOnGround == True: #only jump when on the ground
         vy = -8
         isOnGround = False
@@ -83,32 +90,38 @@ while not gameover: #GAME LOOP##################################################
 
     
     #COLLISION
-    if xpos>100 and xpos<200 and ypos+40 >750 and ypos+40 <770:
-        ypos = 750-40
-        isOnGround = True
-        vy = 0
-    elif xpos>200 and xpos<300 and ypos+40 >650 and ypos+40 <670:
-        ypos = 650-40
-        isOnGround = True
-        vy = 0
-    elif xpos>300 and xpos<400 and ypos+40 >575 and ypos+40 <595:
-        ypos = 575-40
-        isOnGround = True
-        vy = 0
-    elif xpos>175 and xpos<275 and ypos+40 >500 and ypos+40 <520:
-        ypos = 500-40
-        isOnGround = True
-        vy = 0
-    else:
-        isOnGround = False
         
-
-
-    #stop falling if on bottom of game screen
-    if ypos > 760:
+    isOnGround = False
+    if p1.collide(Px, Py) != False:
         isOnGround = True
         vy = 0
-        ypos = 760
+        Py = p1.collide(Px, Py)  - 40 #need to subtract 40
+
+    elif p2.collide(Px, Py) != False:
+        isOnGround = True
+        vy = 0
+        Py = p2.collide(Px, Py)  - 40
+     
+    elif p3.collide(Px, Py) != False:
+        isOnGround = True
+        vy = 0
+        Py = p3.collide(Px, Py)  - 40
+        
+    elif p4.collide(Px, Py) != False:
+        isOnGround = True
+        vy = 0
+        Py = p4.collide(Px, Py)  - 40
+        
+    elif p5.collide(Px, Py) != False:
+        isOnGround = True
+        vy = 0
+        Py = p5.collide(Px, Py)  - 40
+    print(isOnGround)
+    #stop falling if on bottom of game screen
+    if Py > 760:
+        isOnGround = True
+        vy = 0
+        Py = 760
     
     #gravity
     if isOnGround == False:
@@ -116,29 +129,24 @@ while not gameover: #GAME LOOP##################################################
     
 
     #update player position
-    xpos+=vx 
-    ypos+=vy
+    Px+=vx 
+    Py+=vy
     
   
     # RENDER Section--------------------------------------------------------------------------------
             
     screen.fill((0,0,0)) #wipe screen so it doesn't smear
   
-    pygame.draw.rect(screen, (100, 200, 100), (xpos, ypos, 20, 40))
+    pygame.draw.rect(screen, (100, 200, 100), (Px, Py, 20, 40))
     
-    #first platform
-    pygame.draw.rect(screen, (200, 0, 100), (100, 750, 100, 20))
-    
-    #second platform
-    pygame.draw.rect(screen, (100, 0, 200), (200, 650, 100, 20))
-    #third platform
-    pygame.draw.rect(screen, (0, 200, 100), (300, 575, 100, 20))
-    #fourth platform
-    pygame.draw.rect(screen, (100, 0, 100), (175, 500, 100, 20))
     
     #class platforms
     p1.draw()
     p2.draw()
+    p3.draw()
+    p4.draw()
+    p5.draw()
+    
     pygame.display.flip()#this actually puts the pixel on the screen
     
 #end game loop------------------------------------------------------------------------------
