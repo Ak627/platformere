@@ -32,6 +32,8 @@ Px= 500 #xpos of player
 Py= 200 #ypos of player
 vx = 0 #x velocity of player
 vy = 0 #y velocity of player
+controller = pygame.joystick.Joystick(0) 
+controller.init()
 keys = [False, False, False, False] #this list holds whether each key has been pressed
 isOnGround = False #this variable stops gravity from pulling you down more when on a platform
 
@@ -43,7 +45,10 @@ p4 = Platform(300, 575)
 p5  = Platform(175, 500)
 while not gameover: #GAME LOOP############################################################
     clock.tick(60) #FPS
-    
+    if controller.get_button(0):
+        keys[UP] = True
+    else:
+        keys[UP] = False
     #Input Section------------------------------------------------------------
     for event in pygame.event.get(): #quit game if x is pressed in top corner
         if event.type == pygame.QUIT:
@@ -65,8 +70,13 @@ while not gameover: #GAME LOOP##################################################
 
             elif event.key == pygame.K_UP:
                 keys[UP]=False
+                
+    
+        vx = controller.get_axis(0)
+        Px += int(vx * 10)
           
     #physics section--------------------------------------------------------------------
+    
     #LEFT MOVEMENT
     if keys[LEFT]==True:
         vx=-3
@@ -74,7 +84,7 @@ while not gameover: #GAME LOOP##################################################
     elif keys[RIGHT]==True:
         vx=3
         direction = RIGHT
-
+    
     #turn off velocity
     else:
         vx = 0
@@ -95,7 +105,7 @@ while not gameover: #GAME LOOP##################################################
     if p1.collide(Px, Py) != False:
         isOnGround = True
         vy = 0
-        Py = p1.collide(Px, Py)  - 40 #need to subtract 40
+        Py = p1.collide(Px, Py) - 40 #need to subtract 40
 
     elif p2.collide(Px, Py) != False:
         isOnGround = True
