@@ -102,9 +102,10 @@ while not gameover: #GAME LOOP##################################################
         direction = RIGHT
     
     #turn off velocity
-    else:
-        vx = 0
-        
+    #else:
+        #vx = 0
+    else :
+        vx*=.95
         
       #JUMPING  
     if keys[UP] == True and isOnGround == True: #only jump when on the ground
@@ -137,9 +138,13 @@ while not gameover: #GAME LOOP##################################################
            #In this particular case, there are 10 frames (0 through 9)
         if frameNum>2: 
            frameNum = 0
-    if vx == 0:
+           
+    #stop animation if you slow down enough       
+    if vx < .2 and vx >-.2:
         RowNum = 0
         frameNum = 0
+
+        
     #COLLISION
         
     isOnGround = False
